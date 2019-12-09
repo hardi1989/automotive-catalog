@@ -11,12 +11,16 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Spinner;
 
-import com.ehi.aca.adapter.SpinnerCustomAdapter;
+import com.ehi.aca.adapter.SpinnerCustomAdapter_Makes;
+import com.ehi.aca.adapter.SpinnerCustomAdapter_Manufacturer;
 import com.ehi.aca.data.local.entity.ManufacturerEntity;
+import com.ehi.aca.data.remote.model.GetMakes;
+import com.ehi.aca.data.remote.model.Make;
 import com.ehi.aca.viewmodel.ManufacturerDetailsViewModel;
-import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import java.util.List;
 
@@ -29,10 +33,18 @@ public class MainActivity extends AppCompatActivity {
     private Context mContext;
 
     @BindView(R.id.spinner_manufacturer)
-    Spinner materialBetterSpinner;
+    Spinner spinner_manufacturer;
+    @BindView(R.id.spinner_makes)
+    Spinner spinner_makes;
+    @BindView(R.id.spinner_models)
+    Spinner spinner_models;
+
 
     private ManufacturerDetailsViewModel manufacturerDetailsViewModel;
     Unbinder unbinder;
+    private SpinnerCustomAdapter_Manufacturer manufacturer_adapter;
+    private SpinnerCustomAdapter_Makes makes_adapter;
+    private int mfr_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,16 +53,41 @@ public class MainActivity extends AppCompatActivity {
         mContext = MainActivity.this;
         unbinder = ButterKnife.bind(this);
 
+        //Create instance of viewmodel
         manufacturerDetailsViewModel = ViewModelProviders.of(this).get(ManufacturerDetailsViewModel.class);
         manufacturerDetailsViewModel.init(getApplication(), Global.dataType1);
+
+        //get all manufacturer from database
         manufacturerDetailsViewModel.getAlManufacturer().observe(this, new Observer<List<ManufacturerEntity>>() {
             @Override
             public void onChanged(List<ManufacturerEntity> manufacturerEntities) {
-                SpinnerCustomAdapter adapter = new SpinnerCustomAdapter(mContext, manufacturerEntities);
-                materialBetterSpinner.setAdapter(adapter);
+                manufacturer_adapter = new SpinnerCustomAdapter_Manufacturer(mContext, manufacturerEntities);
+                spinner_manufacturer.setAdapter(manufacturer_adapter);
             }
         });
 
+        /*1.On spinner selection ,pass id to getMakesForManufactureId()
+          2.Retrive List of make object
+          3.initialize spinner_make with List of make object
+         */
+        spinner_manufacturer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                mfr_id  = manufacturer_adapter.getItem(pos).getMfr_Id();
+                manufacturerDetailsViewModel.getMakesForManufactureId(mfr_id).observe(MainActivity.this, new Observer<List<Make>>() {
+                    @Override
+                    public void onChanged(List<Make> makes) {
+                        makes_adapter = new SpinnerCustomAdapter_Makes(mContext, makes);
+                        spinner_makes.setAdapter(makes_adapter);
+
+                    }
+                });
+
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     @Override

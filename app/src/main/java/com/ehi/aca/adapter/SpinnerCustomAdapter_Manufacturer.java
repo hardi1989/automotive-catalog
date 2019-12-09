@@ -12,11 +12,11 @@ import com.ehi.aca.data.local.entity.ManufacturerEntity;
 
 import java.util.List;
 
-public class SpinnerCustomAdapter extends BaseAdapter implements SpinnerAdapter {
+public class SpinnerCustomAdapter_Manufacturer extends BaseAdapter implements SpinnerAdapter {
     private List<ManufacturerEntity> spinnerArrayObjects;
     private Context context;
 
-    public SpinnerCustomAdapter(Context context, List<ManufacturerEntity> spinnerArrayObjects) {
+    public SpinnerCustomAdapter_Manufacturer(Context context, List<ManufacturerEntity> spinnerArrayObjects) {
         this.spinnerArrayObjects = spinnerArrayObjects;
         this.context = context;
     }
@@ -41,15 +41,11 @@ public class SpinnerCustomAdapter extends BaseAdapter implements SpinnerAdapter 
         View view = View.inflate(context, R.layout.item_spinner, null);
         TextView textView = (TextView) view.findViewById(R.id.textview_spinneritem);
         textView.setText((CharSequence) spinnerArrayObjects.get(position).getMfr_Name());
+
         return textView;
     }
 
-//    public View getDropDownView(int position, View convertView, ViewGroup parent) {
-//
-//        View view;
-//        view = View.inflate(context, R.layout.company_dropdown, null);
-//        final TextView textView = (TextView) view.findViewById(R.id.dropdown);
-//        textView.setText(spinnerArrayObjects.size());
-//        return view;
-//    }
+    public View getDropDownView(int position, View convertView, ViewGroup parent) {
+        return getView(position, convertView, parent);
+    }
 }

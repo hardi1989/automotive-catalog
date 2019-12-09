@@ -7,7 +7,9 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.ehi.aca.data.local.entity.ManufacturerEntity;
+import com.ehi.aca.data.remote.model.GetMakes;
 import com.ehi.aca.data.remote.model.GetManufacturer;
+import com.ehi.aca.data.remote.model.Make;
 import com.ehi.aca.data.repository.ManufacturerRepository;
 
 import java.util.List;
@@ -40,6 +42,12 @@ public class ManufacturerDetailsViewModel extends ViewModel {
     public LiveData<List<ManufacturerEntity>> getAlManufacturer() {
         return manufacturerRepository.getAlManufacturer();
     }
+
+    //get all manufacturer from api
+    public LiveData<List<Make>> getMakesForManufactureId(int id) {
+        return manufacturerRepository.getMakesForManufactureId(id);
+    }
+
 
     //get all manufacturer from api
     public LiveData<GetManufacturer> getManuFactureData() {

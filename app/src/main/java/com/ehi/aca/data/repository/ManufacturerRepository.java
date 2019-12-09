@@ -10,9 +10,11 @@ import com.ehi.aca.Global;
 import com.ehi.aca.data.local.ACADatabase;
 import com.ehi.aca.data.local.dao.ManufacturerDao;
 import com.ehi.aca.data.local.entity.ManufacturerEntity;
+import com.ehi.aca.data.remote.model.GetMakes;
 import com.ehi.aca.data.remote.model.GetManufacturer;
 import com.ehi.aca.data.remote.JsonApi;
 import com.ehi.aca.data.remote.RetrofitService;
+import com.ehi.aca.data.remote.model.Make;
 import com.ehi.aca.data.remote.model.Manufacturer;
 
 import java.util.List;
@@ -48,14 +50,17 @@ public class ManufacturerRepository {
     public MutableLiveData<GetManufacturer> getManufacturerMutableLiveData() {
         provideService();
         final MutableLiveData<GetManufacturer> manufactureData = new MutableLiveData<>();
-        if (jsonApi == null)
+
             jsonApi.getAllManufacturers().enqueue(new Callback<GetManufacturer>() {
                 @Override
                 public void onResponse(Call<GetManufacturer> call, Response<GetManufacturer> response) {
                     if (response.isSuccessful()) {
                         manufactureData.setValue(response.body());
+
                         if (response.body().getResults() != null) {
+                            Global.eLog("manufacturer Count",response.body().getCount()+"");
                             for (Manufacturer manufacturer : response.body().getResults()) {
+                                //insert or update
                                 insert(new ManufacturerEntity(manufacturer.getMfr_ID(), manufacturer.getMfr_Name()));
                             }
                         }
@@ -71,6 +76,29 @@ public class ManufacturerRepository {
         return manufactureData;
     }
 
+
+    public MutableLiveData<List<Make>> getMakesForManufactureId(int id) {
+        provideService();
+        final MutableLiveData<List<Make>> makesMutableLiveData = new MutableLiveData<>();
+
+            jsonApi.getMakesForManufactureId(id).enqueue(new Callback<GetMakes>() {
+                @Override
+                public void onResponse(Call<GetMakes> call, Response<GetMakes> response) {
+                    if (response.isSuccessful()) {
+                        if (response.body().getResults() != null)
+                        makesMutableLiveData.setValue(response.body().getResults());
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<GetMakes> call, Throwable t) {
+                    Global.eLog(TAG, t.getMessage());
+                    makesMutableLiveData.setValue(null);
+                }
+            });
+        return makesMutableLiveData;
+    }
 
     public void insert(ManufacturerEntity manufacturerEntity) {
         new ManufacturerDetailAsyncTask(manufacturerDao, "insert").execute(manufacturerEntity);

@@ -68,7 +68,6 @@ public class SplashActivity extends AppCompatActivity {
                     finish();
 
                 } else {
-                    connected = false;
                     showDialog(mContext, "", "", "");
                 }
             }
