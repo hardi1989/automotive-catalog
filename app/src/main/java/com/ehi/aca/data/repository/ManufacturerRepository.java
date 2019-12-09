@@ -14,8 +14,10 @@ import com.ehi.aca.data.remote.model.GetMakes;
 import com.ehi.aca.data.remote.model.GetManufacturer;
 import com.ehi.aca.data.remote.JsonApi;
 import com.ehi.aca.data.remote.RetrofitService;
+import com.ehi.aca.data.remote.model.GetModel;
 import com.ehi.aca.data.remote.model.Make;
 import com.ehi.aca.data.remote.model.Manufacturer;
+import com.ehi.aca.data.remote.model.VModel;
 
 import java.util.List;
 
@@ -97,6 +99,30 @@ public class ManufacturerRepository {
                     makesMutableLiveData.setValue(null);
                 }
             });
+        return makesMutableLiveData;
+    }
+
+
+    public MutableLiveData<List<VModel>> getModelsForMakeId(int id) {
+        provideService();
+        final MutableLiveData<List<VModel>> makesMutableLiveData = new MutableLiveData<>();
+
+        jsonApi.getModelsForMakeId(id).enqueue(new Callback<GetModel>() {
+            @Override
+            public void onResponse(Call<GetModel> call, Response<GetModel> response) {
+                if (response.isSuccessful()) {
+                    if (response.body().getResults() != null)
+                        makesMutableLiveData.setValue(response.body().getResults());
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetModel> call, Throwable t) {
+                Global.eLog(TAG, t.getMessage());
+                makesMutableLiveData.setValue(null);
+            }
+        });
         return makesMutableLiveData;
     }
 

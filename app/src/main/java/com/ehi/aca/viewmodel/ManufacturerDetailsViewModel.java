@@ -10,6 +10,7 @@ import com.ehi.aca.data.local.entity.ManufacturerEntity;
 import com.ehi.aca.data.remote.model.GetMakes;
 import com.ehi.aca.data.remote.model.GetManufacturer;
 import com.ehi.aca.data.remote.model.Make;
+import com.ehi.aca.data.remote.model.VModel;
 import com.ehi.aca.data.repository.ManufacturerRepository;
 
 import java.util.List;
@@ -43,11 +44,15 @@ public class ManufacturerDetailsViewModel extends ViewModel {
         return manufacturerRepository.getAlManufacturer();
     }
 
-    //get all manufacturer from api
+    //get all make from api
     public LiveData<List<Make>> getMakesForManufactureId(int id) {
         return manufacturerRepository.getMakesForManufactureId(id);
     }
 
+    //get all models from api
+    public LiveData<List<VModel>> getModelsForMakeId(int id) {
+        return manufacturerRepository.getModelsForMakeId(id);
+    }
 
     //get all manufacturer from api
     public LiveData<GetManufacturer> getManuFactureData() {

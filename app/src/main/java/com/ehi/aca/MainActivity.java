@@ -17,9 +17,11 @@ import android.widget.Spinner;
 
 import com.ehi.aca.adapter.SpinnerCustomAdapter_Makes;
 import com.ehi.aca.adapter.SpinnerCustomAdapter_Manufacturer;
+import com.ehi.aca.adapter.SpinnerCustomAdapter_Models;
 import com.ehi.aca.data.local.entity.ManufacturerEntity;
 import com.ehi.aca.data.remote.model.GetMakes;
 import com.ehi.aca.data.remote.model.Make;
+import com.ehi.aca.data.remote.model.VModel;
 import com.ehi.aca.viewmodel.ManufacturerDetailsViewModel;
 
 import java.util.List;
@@ -44,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
     Unbinder unbinder;
     private SpinnerCustomAdapter_Manufacturer manufacturer_adapter;
     private SpinnerCustomAdapter_Makes makes_adapter;
-    private int mfr_id;
+    private SpinnerCustomAdapter_Models models_adapter;
+    private int mfr_id,mk_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,12 +81,31 @@ public class MainActivity extends AppCompatActivity {
                     public void onChanged(List<Make> makes) {
                         makes_adapter = new SpinnerCustomAdapter_Makes(mContext, makes);
                         spinner_makes.setAdapter(makes_adapter);
-
                     }
                 });
+            }
+            public void onNothingSelected(AdapterView<?> parent) {   }
+        });
 
+
+          /*1.On spinner selection ,pass id to getModelsForMakeId()
+          2.Retrive List of model object
+          3.initialize spinner_model with List of model object
+         */
+        spinner_makes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mk_id=makes_adapter.getItem(position).getMake_ID();
+                manufacturerDetailsViewModel.getModelsForMakeId(mk_id).observe(MainActivity.this, new Observer<List<VModel>>() {
+                    @Override
+                    public void onChanged(List<VModel> vModels) {
+                        models_adapter= new SpinnerCustomAdapter_Models(mContext,vModels);
+                        spinner_models.setAdapter(models_adapter);
+                    }
+                });
             }
 
+            @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
             }

@@ -2,6 +2,7 @@ package com.ehi.aca.data.remote;
 
 import com.ehi.aca.data.remote.model.GetMakes;
 import com.ehi.aca.data.remote.model.GetManufacturer;
+import com.ehi.aca.data.remote.model.GetModel;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -21,6 +22,6 @@ public interface JsonApi {
     Call<GetMakes> getMakesForManufactureId(@Path("id") int manufactureId);
 
     @GET("GetModelsForMakeId/{id}?format=json")
-    Call<GetManufacturer> getModelsForMakeId(@Path("id") int makeid);
+    Call<GetModel> getModelsForMakeId(@Path("id") int makeid);
 }
 
