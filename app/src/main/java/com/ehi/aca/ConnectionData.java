@@ -1,51 +1,101 @@
 package com.ehi.aca;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
-import android.net.NetworkCapabilities;
+import android.net.Network;
 import android.net.NetworkInfo;
+import android.net.NetworkRequest;
 import android.os.Build;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 
 /*
  * File Description
  * Author: Hardi
  */
 
-public class ConnectionData {
-    public static boolean isNetworkAvailable(Context context) {
-        if (context == null) return false;
 
+public class ConnectionData extends LiveData<Boolean> {
+    Context context;
 
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    ConnectionData(Context context)
+    {
+        this.context = context;
+    }
 
-        if (connectivityManager != null) {
+    @Override
+    protected void onActive() {
+        super.onActive();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+            context.registerReceiver(networkReceiver, filter);
+            return;
+        } else {
+            ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkRequest.Builder builder = new NetworkRequest.Builder();
+            connectivityManager.registerNetworkCallback(builder.build(), networkCallback);
+        }
+    }
 
+    @Override
+    protected void onInactive() {
+        super.onInactive();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            context.unregisterReceiver(networkReceiver);
+        } else {
+            ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            connectivityManager.unregisterNetworkCallback(networkCallback);
+        }
+    }
 
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
-                if (capabilities != null) {
-                    if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
-                        return true;
-                    } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-                        return true;
-                    } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
-                        return true;
-                    }
+    private BroadcastReceiver networkReceiver = new BroadcastReceiver() {
+        @SuppressWarnings("deprecation")
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getExtras() != null) {
+                NetworkInfo activeNetwork = (NetworkInfo) intent.getExtras().get(ConnectivityManager.EXTRA_NETWORK_INFO);
+                boolean isConnected = activeNetwork != null &&
+                        activeNetwork.isConnectedOrConnecting();
+                if (isConnected) {
+                    Global.isConnected=true;
+                    Global.eLog("CheckConnection if",Global.isConnected+"");
+                    postValue(true);
                 }
             } else {
-
-                try {
-                    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-                    if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
-                        Global.eLog("update_statut", "Network is available : true");
-                        return true;
-                    }
-                } catch (Exception e) {
-                    Global.eLog("update_statut", "" + e.getMessage());
-                }
+                Global.isConnected=false;
+                Global.eLog("CheckConnection else",Global.isConnected+"");
+                postValue(false);
             }
         }
-        Global.eLog("update_statut", "Network is available : FALSE ");
-        return false;
-    }
+    };
+
+
+    ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
+        @Override
+        public void onAvailable(@NonNull Network network) {
+            super.onAvailable(network);
+            postValue(true);
+            Global.isConnected=true;
+            Global.eLog("CheckConnection onAvailable",Global.isConnected+"");
+        }
+
+        @Override
+        public void onLosing(@NonNull Network network, int maxMsToLive) {
+            super.onLosing(network, maxMsToLive);
+            postValue(false);
+            Global.isConnected=false;
+            Global.eLog("CheckConnection onLosing",Global.isConnected+"");
+        }
+
+        @Override
+        public void onLost(@NonNull Network network) {
+            Global.isConnected=false;
+            Global.eLog("CheckConnection onLost",Global.isConnected+"");
+            postValue(false);
+        }
+    };
 }

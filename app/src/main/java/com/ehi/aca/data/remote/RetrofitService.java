@@ -17,7 +17,7 @@ public class RetrofitService {
             .build();
 
     public static JsonApi createService() {
-
+        Global.eLog("Manufacturer","createService");
         return retrofit.create(JsonApi.class);
     }
 }

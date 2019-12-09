@@ -38,40 +38,36 @@ public class ManufacturerRepository {
         acaDatabase = ACADatabase.getInstance(application);
         manufacturerDao = acaDatabase.manufacturerDao();
         allManufacturer = manufacturerDao.getAllManufacturer();
+
     }
 
-    public static ManufacturerRepository getInstance() {
-        if (manufacturerRepository == null) {
-            manufacturerRepository = new ManufacturerRepository();
-        }
-        return manufacturerRepository;
-    }
-
-    private ManufacturerRepository() {
+    private void provideService() {
         jsonApi = RetrofitService.createService();
     }
 
     public MutableLiveData<GetManufacturer> getManufacturerMutableLiveData() {
+        provideService();
         final MutableLiveData<GetManufacturer> manufactureData = new MutableLiveData<>();
-        jsonApi.getAllManufacturers().enqueue(new Callback<GetManufacturer>() {
-            @Override
-            public void onResponse(Call<GetManufacturer> call, Response<GetManufacturer> response) {
-                if (response.isSuccessful()) {
-                    manufactureData.setValue(response.body());
-                    if(response.body().getResults()!=null) {
-                        for (Manufacturer manufacturer : response.body().getResults()) {
-                            manufacturerDao.insert(new ManufacturerEntity(manufacturer.getMfr_ID(), manufacturer.getMfr_Name()));
+        if (jsonApi == null)
+            jsonApi.getAllManufacturers().enqueue(new Callback<GetManufacturer>() {
+                @Override
+                public void onResponse(Call<GetManufacturer> call, Response<GetManufacturer> response) {
+                    if (response.isSuccessful()) {
+                        manufactureData.setValue(response.body());
+                        if (response.body().getResults() != null) {
+                            for (Manufacturer manufacturer : response.body().getResults()) {
+                                insert(new ManufacturerEntity(manufacturer.getMfr_ID(), manufacturer.getMfr_Name()));
+                            }
                         }
                     }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<GetManufacturer> call, Throwable t) {
-                Global.eLog(TAG, t.getMessage());
-                manufactureData.setValue(null);
-            }
-        });
+                @Override
+                public void onFailure(Call<GetManufacturer> call, Throwable t) {
+                    Global.eLog(TAG, t.getMessage());
+                    manufactureData.setValue(null);
+                }
+            });
         return manufactureData;
     }
 
@@ -79,6 +75,11 @@ public class ManufacturerRepository {
     public void insert(ManufacturerEntity manufacturerEntity) {
         new ManufacturerDetailAsyncTask(manufacturerDao, "insert").execute(manufacturerEntity);
     }
+
+    public LiveData<List<ManufacturerEntity>> getAlManufacturer() {
+        return allManufacturer;
+    }
+
 
     private static class ManufacturerDetailAsyncTask extends AsyncTask<ManufacturerEntity, Void, Void> {
         ManufacturerDao manufacturerDao;

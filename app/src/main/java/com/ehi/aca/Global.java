@@ -14,6 +14,8 @@ public class Global {
     public static boolean showToast = true;
     public static boolean showLog = true;
 
+    public static boolean isConnected=false;
+
     public static String baseUrl = "https://vpic.nhtsa.dot.gov/api/vehicles/";
 
     public static String dataType1 = "local";

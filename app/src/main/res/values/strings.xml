@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Automotive_Catalog</string>
     <string name="splash_image">Splash Image</string>
+    <string name="dialog_header">Alert</string>
+    <string name="dialog_button_text">Close</string>
+    <string name="dialog_message1">Please check your internet connection.</string>
+
 </resources>
