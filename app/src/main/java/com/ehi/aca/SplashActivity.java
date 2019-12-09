@@ -56,7 +56,7 @@ public class SplashActivity extends AppCompatActivity {
             public void onChanged(@Nullable Boolean connection) {
                 /* every time connection state changes, we'll be notified and can perform action accordingly */
                 if (connection) {
-                    manufacturerDetailsViewModel.init(getApplication(), Global.dataType2);
+                   // manufacturerDetailsViewModel.init(getApplication());
                     manufacturerDetailsViewModel.getManuFactureData().observe(SplashActivity.this, new Observer<GetManufacturer>() {
                         @Override
                         public void onChanged(GetManufacturer getManufacturer) {

@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Create instance of viewmodel
         manufacturerDetailsViewModel = ViewModelProviders.of(this).get(ManufacturerDetailsViewModel.class);
-        manufacturerDetailsViewModel.init(getApplication(), Global.dataType1);
+        //manufacturerDetailsViewModel.init(getApplication());
 
         //get all manufacturer from database
         manufacturerDetailsViewModel.getAlManufacturer().observe(this, new Observer<List<ManufacturerEntity>>() {

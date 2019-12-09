@@ -18,9 +18,6 @@ public class Global {
 
     public static String baseUrl = "https://vpic.nhtsa.dot.gov/api/vehicles/";
 
-    public static String dataType1 = "local";
-    public static String dataType2 = "remote";
-
     public static void eLog(String tagName, String logInfo) {
         if (showLog)
             Log.i(tagName, logInfo);

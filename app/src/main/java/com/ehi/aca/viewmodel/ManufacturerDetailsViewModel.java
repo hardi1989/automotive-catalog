@@ -2,6 +2,8 @@ package com.ehi.aca.viewmodel;
 
 import android.app.Application;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -20,38 +22,51 @@ import java.util.List;
  * Author: Hardi
  */
 
-public class ManufacturerDetailsViewModel extends ViewModel {
+public class ManufacturerDetailsViewModel extends AndroidViewModel {
     private static final String TAG = ManufacturerDetailsViewModel.class.getName();
     MutableLiveData<GetManufacturer> manufacturerMutableLiveData;
     ManufacturerRepository manufacturerRepository;
     private LiveData<List<ManufacturerEntity>> listLiveData;
+    LiveData<List<ManufacturerEntity>> manufactureEntityList;
+    LiveData<List<Make>> makeObjList;
+    LiveData<List<VModel>> modelObjList;
 
-    public void init(Application application, String type) {
+
+    public ManufacturerDetailsViewModel(@NonNull Application application){
+        super(application);
         if (manufacturerMutableLiveData != null) {
             return;
         }
-
         manufacturerRepository = new ManufacturerRepository(application);
-
     }
+//    public void init(Application application) {
+//        if (manufacturerMutableLiveData != null) {
+//            return;
+//        }
+//        manufacturerRepository = new ManufacturerRepository(application);
+//    }
 
     public void insert(ManufacturerEntity manufacturerEntity) {
         manufacturerRepository.insert(manufacturerEntity);
     }
 
+
     //get all manufacturer from database
     public LiveData<List<ManufacturerEntity>> getAlManufacturer() {
-        return manufacturerRepository.getAlManufacturer();
+        manufactureEntityList=manufacturerRepository.getAlManufacturer();
+        return manufactureEntityList;
     }
 
     //get all make from api
     public LiveData<List<Make>> getMakesForManufactureId(int id) {
-        return manufacturerRepository.getMakesForManufactureId(id);
+        makeObjList=manufacturerRepository.getMakesForManufactureId(id);
+        return makeObjList;
     }
 
     //get all models from api
     public LiveData<List<VModel>> getModelsForMakeId(int id) {
-        return manufacturerRepository.getModelsForMakeId(id);
+        modelObjList=manufacturerRepository.getModelsForMakeId(id);
+        return modelObjList;
     }
 
     //get all manufacturer from api

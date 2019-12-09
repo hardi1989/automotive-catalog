@@ -5,44 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-<!--
-    <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
-        android:id="@+id/spinner_manufacturer"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:hint="Manufacturer"
-        app:met_floatingLabel="normal"
-        android:textColorHint="#CFD8DC"
-        android:gravity="center"
-        app:layout_constraintVertical_chainStyle="packed"
-        />
 
-    <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
-        android:id="@+id/spinner_makes"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/spinner_manufacturer"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:hint="Makes"
-        app:met_floatingLabel="normal"
-        android:textColorHint="#CFD8DC"
-        android:gravity="center"
-        app:layout_constraintVertical_chainStyle="packed"
-        />
-    <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
-        android:id="@+id/spinner_models"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/spinner_makes"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:hint="Models"
-        app:met_floatingLabel="normal"
-        android:textColorHint="#CFD8DC"
-        android:gravity="center"
-        app:layout_constraintVertical_chainStyle="packed"
-        />-->
     <Spinner
         android:id="@+id/spinner_manufacturer"
         android:layout_width="fill_parent"
