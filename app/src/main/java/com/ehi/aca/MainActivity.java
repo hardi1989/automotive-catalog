@@ -5,6 +5,7 @@ package com.ehi.aca;
  * Author: Hardi
  */
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -13,6 +14,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import com.ehi.aca.adapter.SpinnerCustomAdapter_Makes;
@@ -21,6 +23,7 @@ import com.ehi.aca.adapter.SpinnerCustomAdapter_Models;
 import com.ehi.aca.data.local.entity.ManufacturerEntity;
 import com.ehi.aca.data.remote.model.GetMakes;
 import com.ehi.aca.data.remote.model.Make;
+import com.ehi.aca.data.remote.model.Progress;
 import com.ehi.aca.data.remote.model.VModel;
 import com.ehi.aca.viewmodel.ManufacturerDetailsViewModel;
 
@@ -40,7 +43,12 @@ public class MainActivity extends AppCompatActivity {
     Spinner spinner_makes;
     @BindView(R.id.spinner_models)
     Spinner spinner_models;
-
+    @BindView(R.id.progressBarManufacture)
+    ProgressBar progressBarManufacture;
+    @BindView(R.id.progressBarMake)
+    ProgressBar progressBarMake;
+    @BindView(R.id.progressBarModel)
+    ProgressBar progressBarModel;
 
     private ManufacturerDetailsViewModel manufacturerDetailsViewModel;
     Unbinder unbinder;
@@ -58,7 +66,42 @@ public class MainActivity extends AppCompatActivity {
 
         //Create instance of viewmodel
         manufacturerDetailsViewModel = ViewModelProviders.of(this).get(ManufacturerDetailsViewModel.class);
-        //manufacturerDetailsViewModel.init(getApplication());
+
+        manufacturerDetailsViewModel.getIsLoading().observe(this, new Observer<Progress>() {
+            @Override
+            public void onChanged(@Nullable Progress progress) {
+                if(progress.getProgressName().equals("Manufacture")){
+                    if(progress.getProgressValue()) {
+                        progressBarManufacture.setVisibility(View.VISIBLE);
+                        progressBarMake.setVisibility(View.INVISIBLE);
+                        progressBarModel.setVisibility(View.INVISIBLE);
+                    }
+                    else
+                        progressBarManufacture.setVisibility(View.INVISIBLE);
+                }
+                if(progress.getProgressName().equals("Make")){
+                    if(progress.getProgressValue())
+                    {
+                        progressBarManufacture.setVisibility(View.INVISIBLE);
+                        progressBarMake.setVisibility(View.VISIBLE);
+                        progressBarModel.setVisibility(View.INVISIBLE);
+                    }
+                    else
+                        progressBarMake.setVisibility(View.INVISIBLE);
+                }
+                if(progress.getProgressName().equals("Model")){
+                    if(progress.getProgressValue())
+                    {
+                        progressBarManufacture.setVisibility(View.INVISIBLE);
+                        progressBarMake.setVisibility(View.INVISIBLE);
+                        progressBarModel.setVisibility(View.VISIBLE);
+                    }
+                    else
+                        progressBarModel.setVisibility(View.INVISIBLE);
+                }
+
+            }
+        });
 
         //get all manufacturer from database
         manufacturerDetailsViewModel.getAlManufacturer().observe(this, new Observer<List<ManufacturerEntity>>() {

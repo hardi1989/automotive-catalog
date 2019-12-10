@@ -18,6 +18,15 @@
         android:gravity="center"
         android:layout_marginLeft="@dimen/margin2"
         />
+    <ProgressBar
+        android:id="@+id/progressBarManufacture"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="8dp"
+        android:visibility="invisible" />
     <Spinner
         android:id="@+id/spinner_manufacturer"
         android:layout_width="fill_parent"
@@ -39,6 +48,15 @@
         android:gravity="center"
         android:layout_marginLeft="@dimen/margin2"
         />
+    <ProgressBar
+        android:id="@+id/progressBarMake"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_manufacturer"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="8dp"
+        android:visibility="invisible" />
     <Spinner
         android:id="@+id/spinner_makes"
         android:layout_width="fill_parent"
@@ -60,6 +78,15 @@
         android:gravity="center"
         android:layout_marginLeft="@dimen/margin2"
         />
+    <ProgressBar
+        android:id="@+id/progressBarModel"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_makes"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="8dp"
+        android:visibility="invisible" />
     <Spinner
         android:id="@+id/spinner_models"
         android:layout_width="fill_parent"

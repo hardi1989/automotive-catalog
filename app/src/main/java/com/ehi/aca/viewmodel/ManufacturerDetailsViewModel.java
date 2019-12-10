@@ -6,12 +6,11 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.ehi.aca.data.local.entity.ManufacturerEntity;
-import com.ehi.aca.data.remote.model.GetMakes;
 import com.ehi.aca.data.remote.model.GetManufacturer;
 import com.ehi.aca.data.remote.model.Make;
+import com.ehi.aca.data.remote.model.Progress;
 import com.ehi.aca.data.remote.model.VModel;
 import com.ehi.aca.data.repository.ManufacturerRepository;
 
@@ -39,17 +38,16 @@ public class ManufacturerDetailsViewModel extends AndroidViewModel {
         }
         manufacturerRepository = new ManufacturerRepository(application);
     }
-//    public void init(Application application) {
-//        if (manufacturerMutableLiveData != null) {
-//            return;
-//        }
-//        manufacturerRepository = new ManufacturerRepository(application);
-//    }
 
     public void insert(ManufacturerEntity manufacturerEntity) {
         manufacturerRepository.insert(manufacturerEntity);
     }
 
+
+    public LiveData<Progress> getIsLoading(){
+        LiveData<Progress> isLoading=manufacturerRepository.getIsLoading();
+        return isLoading;
+    }
 
     //get all manufacturer from database
     public LiveData<List<ManufacturerEntity>> getAlManufacturer() {
