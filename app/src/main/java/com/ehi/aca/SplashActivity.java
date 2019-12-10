@@ -50,13 +50,12 @@ public class SplashActivity extends AppCompatActivity {
         manufacturerDetailsViewModel = ViewModelProviders.of(this).get(ManufacturerDetailsViewModel.class);
 
         ConnectionData connectionLiveData = new ConnectionData(mContext);
-        connectionLiveData.onActive();
+        //connectionLiveData.onActive();
         connectionLiveData.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(@Nullable Boolean connection) {
                 /* every time connection state changes, we'll be notified and can perform action accordingly */
                 if (connection) {
-                   // manufacturerDetailsViewModel.init(getApplication());
                     manufacturerDetailsViewModel.getManuFactureData().observe(SplashActivity.this, new Observer<GetManufacturer>() {
                         @Override
                         public void onChanged(GetManufacturer getManufacturer) {
@@ -109,6 +108,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        if(unbinder!=null)
         unbinder.unbind();
     }
 }
