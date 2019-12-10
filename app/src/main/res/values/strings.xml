@@ -5,4 +5,8 @@
     <string name="dialog_button_text">Close</string>
     <string name="dialog_message1">Please check your internet connection.</string>
 
+    <string name="manufacture_header">Manufacture</string>
+    <string name="make_header">Make</string>
+    <string name="model_header">Model</string>
+
 </resources>

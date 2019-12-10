@@ -64,8 +64,10 @@ public class MainActivity extends AppCompatActivity {
         manufacturerDetailsViewModel.getAlManufacturer().observe(this, new Observer<List<ManufacturerEntity>>() {
             @Override
             public void onChanged(List<ManufacturerEntity> manufacturerEntities) {
-                manufacturer_adapter = new SpinnerCustomAdapter_Manufacturer(mContext, manufacturerEntities);
-                spinner_manufacturer.setAdapter(manufacturer_adapter);
+                if(manufacturerEntities != null) {
+                    manufacturer_adapter = new SpinnerCustomAdapter_Manufacturer(mContext, manufacturerEntities);
+                    spinner_manufacturer.setAdapter(manufacturer_adapter);
+                }
             }
         });
 
@@ -79,8 +81,10 @@ public class MainActivity extends AppCompatActivity {
                 manufacturerDetailsViewModel.getMakesForManufactureId(mfr_id).observe(MainActivity.this, new Observer<List<Make>>() {
                     @Override
                     public void onChanged(List<Make> makes) {
-                        makes_adapter = new SpinnerCustomAdapter_Makes(mContext, makes);
-                        spinner_makes.setAdapter(makes_adapter);
+                       if(makes!=null) {
+                           makes_adapter = new SpinnerCustomAdapter_Makes(mContext, makes);
+                           spinner_makes.setAdapter(makes_adapter);
+                       }
                     }
                 });
             }
@@ -99,8 +103,10 @@ public class MainActivity extends AppCompatActivity {
                 manufacturerDetailsViewModel.getModelsForMakeId(mk_id).observe(MainActivity.this, new Observer<List<VModel>>() {
                     @Override
                     public void onChanged(List<VModel> vModels) {
-                        models_adapter= new SpinnerCustomAdapter_Models(mContext,vModels);
-                        spinner_models.setAdapter(models_adapter);
+                        if(vModels != null) {
+                            models_adapter = new SpinnerCustomAdapter_Models(mContext, vModels);
+                            spinner_models.setAdapter(models_adapter);
+                        }
                     }
                 });
             }

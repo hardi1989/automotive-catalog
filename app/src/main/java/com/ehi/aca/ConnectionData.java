@@ -30,6 +30,7 @@ public class ConnectionData extends LiveData<Boolean> {
     @Override
     protected void onActive() {
         super.onActive();
+        Global.eLog("CheckConnection onActive",Global.isConnected+"");
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
             context.registerReceiver(networkReceiver, filter);
@@ -44,6 +45,7 @@ public class ConnectionData extends LiveData<Boolean> {
     @Override
     protected void onInactive() {
         super.onInactive();
+        Global.eLog("CheckConnection In onActive",Global.isConnected+"");
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             context.unregisterReceiver(networkReceiver);
         } else {
@@ -56,6 +58,7 @@ public class ConnectionData extends LiveData<Boolean> {
         @SuppressWarnings("deprecation")
         @Override
         public void onReceive(Context context, Intent intent) {
+            Global.eLog("CheckConnection networkReceiver",Global.isConnected+"");
             if (intent.getExtras() != null) {
                 NetworkInfo activeNetwork = (NetworkInfo) intent.getExtras().get(ConnectivityManager.EXTRA_NETWORK_INFO);
                 boolean isConnected = activeNetwork != null &&
@@ -78,17 +81,17 @@ public class ConnectionData extends LiveData<Boolean> {
         @Override
         public void onAvailable(@NonNull Network network) {
             super.onAvailable(network);
-            postValue(true);
             Global.isConnected=true;
             Global.eLog("CheckConnection onAvailable",Global.isConnected+"");
+            postValue(true);
         }
 
         @Override
         public void onLosing(@NonNull Network network, int maxMsToLive) {
             super.onLosing(network, maxMsToLive);
-            postValue(false);
             Global.isConnected=false;
             Global.eLog("CheckConnection onLosing",Global.isConnected+"");
+            postValue(false);
         }
 
         @Override
@@ -98,4 +101,6 @@ public class ConnectionData extends LiveData<Boolean> {
             postValue(false);
         }
     };
+
+
 }
